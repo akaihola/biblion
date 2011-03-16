@@ -39,10 +39,10 @@ class PostAdmin(admin.ModelAdmin):
     def formfield_for_dbfield(self, db_field, **kwargs):
         request = kwargs.pop("request")
         if db_field.name == "author":
-            ff = super(PostAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+            ff = super(PostAdmin, self).formfield_for_dbfield(db_field, request=request, **kwargs)
             ff.initial = request.user.id
             return ff
-        return super(PostAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+        return super(PostAdmin, self).formfield_for_dbfield(db_field, request=request, **kwargs)
     
     def get_form(self, request, obj=None, **kwargs):
         kwargs.update({
