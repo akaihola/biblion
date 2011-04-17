@@ -70,6 +70,29 @@ def latest_section_post(parser, token):
     return LatestSectionPostNode(bits[1], bits[3])
 
 
+class LatestSectionPostsNode(template.Node):
+
+    def __init__(self, section, context_var):
+        self.section = template.Variable(section)
+        self.context_var = context_var
+
+    def render(self, context):
+        section = self.section.resolve(context)
+        latest_posts = Post.objects.section(
+            section, queryset=Post.objects.current())[:5]
+        context[self.context_var] = latest_posts
+        return u""
+
+
+@register.tag
+def latest_section_posts(parser, token):
+    """
+        {% latest_section_posts "articles" as latest_article_posts %}
+    """
+    bits = token.split_contents()
+    return LatestSectionPostsNode(bits[1], bits[3])
+
+
 class BlogSectionsNode(template.Node):
     
     def __init__(self, context_var):
